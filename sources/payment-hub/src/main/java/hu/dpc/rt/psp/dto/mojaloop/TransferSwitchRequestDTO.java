@@ -132,4 +132,19 @@ public class TransferSwitchRequestDTO {
     public void setExtensionList(List<Extension> extensionList) {
         this.extensionList = extensionList;
     }
+
+    public Extension getExtension(String key) {
+        if (extensionList == null)
+            return null;
+        for (Extension extension : extensionList) {
+            if (extension.getKey().equals(key))
+                return extension;
+        }
+        return null;
+    }
+
+    public String getExtensionValue(String key) {
+        Extension extension = getExtension(key);
+        return extension == null ? null : extension.getValue();
+    }
 }

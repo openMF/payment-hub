@@ -26,7 +26,9 @@ import static hu.dpc.rt.psp.type.TransactionRole.PAYER;
 
 public class ContextUtil {
 
-    public static final String EXTENSION_TRANSACTION_ID = "transactionId";
+    public static final String EXTENSION_KEY_TRANSACTION_ID = "transactionId";
+    public static final String EXTENSION_KEY_CHANNEL_CLIENT_REF = "CHANNEL_CLIENT_REF";
+    public static final String EXTENSION_SEPARATOR = "#_#";
 
     private final static SimpleDateFormat LOCAL_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
     private final static DecimalFormat AMOUNT_FORMAT = new DecimalFormat("#.####");
