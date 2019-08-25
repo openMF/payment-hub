@@ -361,7 +361,7 @@ public class TransactionObject {
 
     @Override
     public String toString() {
-        return "TransactionObject{" +
+        return "{" +
                 "amount='" + amount + '\'' +
                 ", currency='" + currency + '\'' +
                 ", type='" + type + '\'' +

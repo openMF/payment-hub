@@ -15,7 +15,7 @@ public class PeerToPeerTransfer extends RouteBuilder {
         String port = "8081";
         String url = "http://0.0.0.0:" + port + "/transfer";
 
-        String clientUrl = "jetty:" + url + "?httpMethodRestrict=" + HttpMethod.POST;
+        String clientUrl = "jetty:" + url + "?httpMethodRestrict=" + HttpMethod.POST + "&enableCORS=true";
 
         from(clientUrl)
                 .id("receiveTransferRequest")
@@ -30,7 +30,7 @@ public class PeerToPeerTransfer extends RouteBuilder {
 
         from("direct:checkReceiverId")
                 .id("checkReceiverId")
-                .process("checkReceiverAccounts")
+                .process("checkReceiverAccountsProcessor")
                 .choice()
                 .when(exchange -> exchange.getIn().getBody() == null)
                     .log("Error: credit party does not exist")

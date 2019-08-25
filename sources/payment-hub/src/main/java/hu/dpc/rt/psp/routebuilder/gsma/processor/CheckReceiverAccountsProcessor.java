@@ -14,7 +14,7 @@ import hu.dpc.rt.psp.dto.gsma.TransactionObject;
 
 import java.time.LocalDateTime;
 
-@Component("checkReceiverAccounts")
+@Component("checkReceiverAccountsProcessor")
 public class CheckReceiverAccountsProcessor implements Processor {
 
     RestTemplate restTemplate;

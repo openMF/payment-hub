@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.UUID;
 
-@Component("postTransactions")
+@Component("postTransactionsProcessor")
 public class PostTransactionsProcessor implements Processor {
 
     RestTemplate restTemplate;

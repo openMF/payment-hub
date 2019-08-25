@@ -1,0 +1,131 @@
+{
+  "groups": [
+    {
+      "name": "channel-settings",
+      "type": "hu.dpc.rt.psp.config.ChannelSettings",
+      "sourceType": "hu.dpc.rt.psp.config.ChannelSettings"
+    },
+    {
+      "name": "fsp-settings",
+      "type": "hu.dpc.rt.psp.config.FspSettings",
+      "sourceType": "hu.dpc.rt.psp.config.FspSettings"
+    },
+    {
+      "name": "hub-settings",
+      "type": "hu.dpc.rt.psp.config.HubSettings",
+      "sourceType": "hu.dpc.rt.psp.config.HubSettings"
+    },
+    {
+      "name": "iban-settings",
+      "type": "hu.dpc.rt.psp.config.IbanSettings",
+      "sourceType": "hu.dpc.rt.psp.config.IbanSettings"
+    },
+    {
+      "name": "mock-settings",
+      "type": "hu.dpc.rt.psp.config.MockSettings",
+      "sourceType": "hu.dpc.rt.psp.config.MockSettings"
+    },
+    {
+      "name": "switch-settings",
+      "type": "hu.dpc.rt.psp.config.SwitchSettings",
+      "sourceType": "hu.dpc.rt.psp.config.SwitchSettings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "channel-settings.bindings",
+      "type": "java.util.List<hu.dpc.rt.psp.config.BindingProperties>",
+      "sourceType": "hu.dpc.rt.psp.config.ChannelSettings"
+    },
+    {
+      "name": "channel-settings.cors-enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "hu.dpc.rt.psp.config.ChannelSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "fsp-settings.auth",
+      "type": "hu.dpc.rt.psp.config.AuthProperties",
+      "sourceType": "hu.dpc.rt.psp.config.FspSettings"
+    },
+    {
+      "name": "fsp-settings.bindings",
+      "type": "java.util.List<hu.dpc.rt.psp.config.BindingProperties>",
+      "sourceType": "hu.dpc.rt.psp.config.FspSettings"
+    },
+    {
+      "name": "fsp-settings.ilp-secret",
+      "type": "java.lang.String",
+      "sourceType": "hu.dpc.rt.psp.config.FspSettings"
+    },
+    {
+      "name": "hub-settings.expiration",
+      "type": "java.lang.Long",
+      "sourceType": "hu.dpc.rt.psp.config.HubSettings"
+    },
+    {
+      "name": "hub-settings.instance",
+      "type": "java.lang.String",
+      "sourceType": "hu.dpc.rt.psp.config.HubSettings"
+    },
+    {
+      "name": "hub-settings.tenants",
+      "type": "java.util.List<java.lang.String>",
+      "sourceType": "hu.dpc.rt.psp.config.HubSettings"
+    },
+    {
+      "name": "iban-settings.fsp-instance-id-first-index",
+      "type": "java.lang.Integer",
+      "sourceType": "hu.dpc.rt.psp.config.IbanSettings",
+      "defaultValue": 0
+    },
+    {
+      "name": "iban-settings.fsp-instance-id-length",
+      "type": "java.lang.Integer",
+      "sourceType": "hu.dpc.rt.psp.config.IbanSettings",
+      "defaultValue": 0
+    },
+    {
+      "name": "iban-settings.fsp-tenant-id-first-index",
+      "type": "java.lang.Integer",
+      "sourceType": "hu.dpc.rt.psp.config.IbanSettings",
+      "defaultValue": 0
+    },
+    {
+      "name": "iban-settings.fsp-tenant-id-length",
+      "type": "java.lang.Integer",
+      "sourceType": "hu.dpc.rt.psp.config.IbanSettings",
+      "defaultValue": 0
+    },
+    {
+      "name": "mock-settings.start-channel-consumers",
+      "type": "java.lang.Boolean",
+      "sourceType": "hu.dpc.rt.psp.config.MockSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "mock-settings.start-fsp-consumers",
+      "type": "java.lang.Boolean",
+      "sourceType": "hu.dpc.rt.psp.config.MockSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "mock-settings.start-mojaloop-consumers",
+      "type": "java.lang.Boolean",
+      "sourceType": "hu.dpc.rt.psp.config.MockSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "switch-settings.bindings",
+      "type": "java.util.List<hu.dpc.rt.psp.config.BindingProperties>",
+      "sourceType": "hu.dpc.rt.psp.config.SwitchSettings"
+    },
+    {
+      "name": "switch-settings.integration-enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "hu.dpc.rt.psp.config.SwitchSettings",
+      "defaultValue": false
+    }
+  ],
+  "hints": []
+}

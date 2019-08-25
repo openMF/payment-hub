@@ -2,3 +2,5 @@
 *.iml
 *.jar
 *.class
+logs/
+deploy.sh
