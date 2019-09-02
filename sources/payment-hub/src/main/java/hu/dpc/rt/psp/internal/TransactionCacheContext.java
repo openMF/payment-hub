@@ -14,7 +14,7 @@ import hu.dpc.rt.psp.dto.GeoCode;
 import hu.dpc.rt.psp.dto.MoneyData;
 import hu.dpc.rt.psp.dto.PartyIdInfo;
 import hu.dpc.rt.psp.dto.TransactionType;
-import hu.dpc.rt.psp.dto.channel.TransactionChannelRequestDTO;
+import hu.dpc.rt.psp.dto.mojaloop.channel.TransactionChannelRequestDTO;
 import hu.dpc.rt.psp.dto.fsp.PartyFspResponseDTO;
 import hu.dpc.rt.psp.dto.fsp.QuoteFspResponseDTO;
 import hu.dpc.rt.psp.dto.fsp.TransactionRequestFspResponseDTO;

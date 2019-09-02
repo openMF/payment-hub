@@ -19,6 +19,13 @@ public class InternationalTransferInformation {
     String originCountry;
     String quotationReference;
     String quoteId;
+    String receivingCountry;
+    String remittancePurpose;
+    String relationshipSender;
+    String deliveryMethod;
+    String senderBlockingReason;
+    String recipientBlockingReason;
+
 
     public String getOriginCountry() {
         return originCountry;
@@ -91,12 +98,4 @@ public class InternationalTransferInformation {
     public void setRecipientBlockingReason(String recipientBlockingReason) {
         this.recipientBlockingReason = recipientBlockingReason;
     }
-
-    String receivingCountry;
-    String remittancePurpose;
-    String relationshipSender;
-    String deliveryMethod;
-    String senderBlockingReason;
-    String recipientBlockingReason;
-
 }

@@ -26,9 +26,7 @@ public class PostTransactionsProcessor implements Processor {
     @Override
     public void process (Exchange exchange) throws Exception {
 
-        //Message data = exchange.getIn();
-        String body = exchange.getIn().getBody(String.class);
-        //System.out.println(body);
+        String body = exchange.getProperty("mainBody", String.class);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -41,18 +39,15 @@ public class PostTransactionsProcessor implements Processor {
         httpHeaders.set("Date", date);
 
         HttpEntity<String> entity = new HttpEntity<>(body, httpHeaders);
-        //System.out.println("Entity: " + entity);
 
         HttpMethod httpMethod = HttpMethod.POST;
 
-        String apikey = "u8YfSQNnNsGFAaqRm3sGShpO2ywLRJgs";
+        String apikey = exchange.getProperty("apikey", String.class);
 
-        String endpointUrl = "https://sandbox.mobilemoneyapi.io/simulator/v1.0/mm/transactions?apikey=" + apikey;
+        String endpointUrl = exchange.getProperty("apiTransactionsEndpoint", String.class) + "?apikey=" + apikey;
 
         TransactionObject response = restTemplate.exchange(endpointUrl, httpMethod, entity,
                                         TransactionObject.class).getBody();
-
-        //System.out.println(response.toString());
 
         exchange.getIn().setBody(response);
     }

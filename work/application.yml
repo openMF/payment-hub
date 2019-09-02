@@ -60,6 +60,30 @@ channel-settings:
   - name: client-status #get status by client id
     base: channel/transactions/client
 
+ott-settings:
+  cors-enabled: true
+  apikey: u8YfSQNnNsGFAaqRm3sGShpO2ywLRJgs
+  operations: #hub -> ott
+  - name: operation-basic-settings
+    host: https://sandbox.mobilemoneyapi.io/simulator/v1.0/mm
+    tenants:
+    - name: tn03
+      port: 48888
+    - name: tn04
+      port: 48889
+  - name: transactions
+    base: transactions
+  - name: accounts
+    base: accounts
+  bindings: #ott -> hub
+  - name: binding-basic-settings
+    host: http://0.0.0.0
+    port: 58080
+  - name: merchantpayment # post merchant payment
+    base: merchantpayment
+  - name: transfer # post peer-to-peer transfer
+    base: transfer
+
 fsp-settings:
   ilp-secret: h4on38bsDjKiat2783gnklgafikmeuu5123kpobb7jm99
   auth:

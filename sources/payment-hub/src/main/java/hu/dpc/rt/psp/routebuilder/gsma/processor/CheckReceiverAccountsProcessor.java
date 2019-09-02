@@ -29,7 +29,6 @@ public class CheckReceiverAccountsProcessor implements Processor {
 
          Message in = exchange.getIn();
          TransactionObject transactionObject = in.getBody(TransactionObject.class);
-         //System.out.println("checkReceiverAccount processing body: " + transactionObject.toString());
 
          for (Party p: transactionObject.getCreditParty()) {
              String key = p.getKey();
@@ -45,10 +44,12 @@ public class CheckReceiverAccountsProcessor implements Processor {
 
              HttpMethod httpMethod = HttpMethod.GET;
 
-             String apikey = "u8YfSQNnNsGFAaqRm3sGShpO2ywLRJgs";
+             String apikey = exchange.getProperty("apikey", String.class);
 
-             String endpointUrl = "https://sandbox.mobilemoneyapi.io/simulator/v1.0/mm/accounts/" + key + "@" +
-                                    value + "/status?apikey=" + apikey;
+             //String endpointUrl = exchange.getProperty("apiEndpoint", String.class) + "?apikey=" + apikey;
+
+             String endpointUrl = exchange.getProperty("apiAccountsEndpoint", String.class) + key + "@" +
+                                    value + "/status" + "?apikey=" + apikey;
 
              //System.out.println(key + value);
 

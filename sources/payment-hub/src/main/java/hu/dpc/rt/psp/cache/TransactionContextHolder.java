@@ -9,7 +9,7 @@ package hu.dpc.rt.psp.cache;
 
 import hu.dpc.rt.psp.dto.Party;
 import hu.dpc.rt.psp.dto.PartyIdInfo;
-import hu.dpc.rt.psp.dto.channel.TransactionChannelRequestDTO;
+import hu.dpc.rt.psp.dto.mojaloop.channel.TransactionChannelRequestDTO;
 import hu.dpc.rt.psp.dto.fsp.PartyFspResponseDTO;
 import hu.dpc.rt.psp.dto.fsp.QuoteFspResponseDTO;
 import hu.dpc.rt.psp.dto.fsp.TransactionRequestFspResponseDTO;

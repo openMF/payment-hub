@@ -10,7 +10,7 @@ package hu.dpc.rt.psp.routebuilder.mojaloop.processor;
 import hu.dpc.rt.psp.cache.TransactionContextHolder;
 import hu.dpc.rt.psp.component.ChannelRestClient;
 import hu.dpc.rt.psp.constant.ExchangeHeader;
-import hu.dpc.rt.psp.dto.channel.TransactionChannelAsyncResponseDTO;
+import hu.dpc.rt.psp.dto.mojaloop.channel.TransactionChannelAsyncResponseDTO;
 import hu.dpc.rt.psp.internal.FspId;
 import hu.dpc.rt.psp.internal.TransactionCacheContext;
 import org.apache.camel.Exchange;

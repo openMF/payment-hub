@@ -12,7 +12,7 @@ import hu.dpc.rt.psp.component.SwitchRestClient;
 import hu.dpc.rt.psp.config.BindingProperties;
 import hu.dpc.rt.psp.config.ChannelSettings;
 import hu.dpc.rt.psp.config.HubSettings;
-import hu.dpc.rt.psp.dto.channel.RegisterAliasRequestDTO;
+import hu.dpc.rt.psp.dto.mojaloop.channel.RegisterAliasRequestDTO;
 import hu.dpc.rt.psp.dto.fsp.PartyFspResponseDTO;
 import hu.dpc.rt.psp.internal.FspId;
 import hu.dpc.rt.psp.type.IdentifierType;

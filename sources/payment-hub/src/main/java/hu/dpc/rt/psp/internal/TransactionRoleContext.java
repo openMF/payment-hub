@@ -11,7 +11,7 @@ import hu.dpc.rt.psp.dto.FspMoneyData;
 import hu.dpc.rt.psp.dto.MoneyData;
 import hu.dpc.rt.psp.dto.Party;
 import hu.dpc.rt.psp.dto.PartyIdInfo;
-import hu.dpc.rt.psp.dto.channel.TransactionChannelRequestDTO;
+import hu.dpc.rt.psp.dto.mojaloop.channel.TransactionChannelRequestDTO;
 import hu.dpc.rt.psp.dto.fsp.PartyFspResponseDTO;
 import hu.dpc.rt.psp.dto.fsp.QuoteFspResponseDTO;
 import hu.dpc.rt.psp.dto.fsp.TransactionRequestFspResponseDTO;

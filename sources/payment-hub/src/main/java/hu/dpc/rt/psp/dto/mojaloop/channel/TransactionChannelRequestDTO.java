@@ -5,7 +5,7 @@
  *
  *  https://mozilla.org/MPL/2.0/.
  */
-package hu.dpc.rt.psp.dto.channel;
+package hu.dpc.rt.psp.dto.mojaloop.channel;
 
 import hu.dpc.rt.psp.dto.Extension;
 import hu.dpc.rt.psp.dto.GeoCode;

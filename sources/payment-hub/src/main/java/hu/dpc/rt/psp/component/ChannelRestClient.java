@@ -9,7 +9,7 @@ package hu.dpc.rt.psp.component;
 
 import hu.dpc.rt.psp.config.ChannelSettings;
 import hu.dpc.rt.psp.config.TenantProperties;
-import hu.dpc.rt.psp.dto.channel.TransactionChannelAsyncResponseDTO;
+import hu.dpc.rt.psp.dto.mojaloop.channel.TransactionChannelAsyncResponseDTO;
 import hu.dpc.rt.psp.internal.FspId;
 import hu.dpc.rt.psp.util.JsonUtil;
 import org.slf4j.Logger;

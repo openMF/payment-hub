@@ -1,19 +1,18 @@
 package hu.dpc.rt.psp.routebuilder.gsma.processor;
 
+import hu.dpc.rt.psp.dto.gsma.TransactionObject;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import hu.dpc.rt.psp.dto.gsma.TransactionObject;
 
-@Component("checkTransactionsProcessor")
-public class CheckTransactionsProcessor implements Processor {
+@Component("checkTransactionsTypeProcessor")
+public class CheckTransactionsTypeProcessor implements Processor {
 
     RestTemplate restTemplate;
 
-    public CheckTransactionsProcessor (RestTemplate restTemplate) {
-
+    public CheckTransactionsTypeProcessor (RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
@@ -23,10 +22,13 @@ public class CheckTransactionsProcessor implements Processor {
         Message in = exchange.getIn();
         TransactionObject transactionObject = in.getBody(TransactionObject.class);
 
-        if (transactionObject.getTransactionStatus().equals("completed")) {
-            exchange.setProperty("isTransactionSuccess", true);
-        }
+        //TODO: add more checks
 
-        exchange.getOut().setBody(transactionObject);
+        String transactionType = exchange.getProperty("transactionType", String.class);
+
+        if (!(transactionType.equals(transactionObject.getType()))) {
+            System.out.println("Transaction type does not match.");
+            exchange.getIn().setBody(null);
+        }
     }
 }

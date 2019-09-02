@@ -1,6 +1,11 @@
 package hu.dpc.rt.psp.routebuilder.gsma.channel;
 
+import hu.dpc.rt.psp.config.*;
+import hu.dpc.rt.psp.dto.gsma.TransactionObject;
+import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.dataformat.JsonLibrary;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 
@@ -13,35 +18,42 @@ public class MerchantPayment extends RouteBuilder {
      * What also needs to happen is checking if the transaction is completed successfully or not.
      */
 
+    private HubSettings hubSettings;
+    private OttSettings ottSettings;
+
+    @Autowired
+    public MerchantPayment (CamelContext camelContext, HubSettings hubSettings, OttSettings ottSettings) {
+
+        super(camelContext);
+        this.hubSettings = hubSettings;
+        this.ottSettings = ottSettings;
+    }
 
     @Override
     public void configure() throws Exception {
+        getContext().getShutdownStrategy().setTimeout(1);
 
-        String port = "8081";
-        String url = "http://0.0.0.0:" + port + "/merchantpayment";
+        OperationProperties transactionsOperation = ottSettings.getOperation(OttSettings.OttOperation.TRANSACTIONS);
+        String apiTransactionsEndpoint = transactionsOperation.getUrl();
 
-        String clientUrl = "jetty:" + url + "?httpMethodRestrict=" + HttpMethod.POST + "&enableCORS=true";
+        BindingProperties binding = ottSettings.getBinding(OttSettings.OttBinding.MERCHANTPAYMENT);
+        String url = binding.getUrl();
 
-        from(clientUrl)
-                .id("receiveMerchantPaymentRequest")
+        String consumerEndpoint = "jetty:" + url + "?httpMethodRestrict=" + HttpMethod.POST + "&enableCORS=" +
+                                    ottSettings.isCorsEnabled();
+
+        from(consumerEndpoint)
+                .id("receive-merchant-payment-request")
                 .log("Request received")
+                .streamCaching()
                 .process(exchange -> {
-                    exchange.setProperty("clientUrl", url);
+                    exchange.setProperty("apikey", ottSettings.getApikey());
+                    exchange.setProperty("apiTransactionsEndpoint", apiTransactionsEndpoint);
+                    exchange.setProperty("transactionType", binding.getName());
+                    exchange.setProperty("mainBody", exchange.getIn().getBody(String.class));
                 })
-                .to("direct:commitTransaction")
-        ;
-
-        from("direct:commitTransaction")
-            .id("commitTransaction")
-            .log("Committing transaction...")
-            .process("postTransactionsProcessor")
-            .to("direct:giveConfirmation")
-        ;
-
-        from("direct:giveConfirmation")
-                .id("giveConfirmation")
-                .log("Checking transaction status...")
-                .process("checkTransactionsProcessor")
+                .unmarshal().json(JsonLibrary.Jackson, TransactionObject.class)
+                .to("direct:conductTransaction")
         ;
     }
 }
