@@ -1,5 +1,5 @@
 # payment-hub
-Repository to house the payment hub for integration with external payment platforms like Mojaloop
+Repository to house the payment hub for integration with external payment platforms like Mojaloop and Over-The-Top APIs like GSMA Mobile Money.
 
 #### FSP - Fineract 1.X settings
     fsp-settings:
@@ -60,3 +60,30 @@ Repository to house the payment hub for integration with external payment platfo
         base: /interoperation/v1/quotes
       - name: transfers
         base: /interoperation/v1/transfers
+
+#### OTT - GSMA Settings
+    ott-settings:
+      cors-enabled: true
+      apikey: u8YfSQNnNsGFAaqRm3sGShpO2ywLRJgs
+      operations: #hub -> ott
+      - name: operation-basic-settings
+        host: https://sandbox.mobilemoneyapi.io/simulator/v1.0/mm
+        tenants:
+        - name: tn03
+          port: 48888
+        - name: tn04
+          port: 48889
+      - name: transactions
+        base: transactions
+      - name: accounts
+        base: accounts
+      bindings: #ott -> hub
+      - name: binding-basic-settings
+        host: http://0.0.0.0
+        port: 58080
+      - name: merchantpayment # post merchant payment
+        base: merchantpayment
+      - name: transfer # post peer-to-peer transfer
+        base: transfer
+
+Currently, the basic transaction use cases - Merchant Payment and Peer-To-Peer transfer - have been integrated with the Payment Hub.
