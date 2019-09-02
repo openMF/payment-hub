@@ -1,0 +1,7 @@
+.idea/
+*.iml
+*.jar
+*.class
+logs/
+deploy.sh
+sources/payment-hub/target/
