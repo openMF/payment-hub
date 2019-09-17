@@ -33,6 +33,8 @@ import org.ehcache.CacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -41,6 +43,8 @@ import java.util.HashSet;
 
 @Component
 public class TransactionContextHolder {
+
+    private static Logger logger = LoggerFactory.getLogger(TransactionContextHolder.class);
 
     private CacheManager cacheManager;
     private Cache<String, TransactionCacheContext> transactionContextCache; // transactionId -> transaction context
@@ -90,10 +94,7 @@ public class TransactionContextHolder {
             PartyContext cacheContext = putOrUpdateParty(roleContext.getPartyContext());
             roleContext.setPartyContext(cacheContext);
         }
-        String channelClientRef = transactionCacheContext.getChannelClientRef();
-        if (channelClientRef != null) {
-            channelClientRefCache.put(channelClientRef, transactionId);
-        }
+        updateChannelClientRefCache(transactionCacheContext.getChannelClientRef(), transactionId);
         updateTransferCache(transactionCacheContext.getTransferId(), transactionId);
     }
 
@@ -116,6 +117,13 @@ public class TransactionContextHolder {
         return transactionContextCache.get(transactionId);
     }
 
+    private void updateChannelClientRefCache(String channelClientRef, String transactionId) {
+        if (channelClientRef != null) {
+            logger.info("Register channelClientRef " + channelClientRef + " for transaction " + transactionId);
+            channelClientRefCache.put(channelClientRef, transactionId);
+        }
+    }
+
     public TransactionCacheContext getContextByChannelClientRef(String channelClientRef) {
         String transactionId = channelClientRefCache.get(channelClientRef);
         return transactionId == null ? null : transactionContextCache.get(transactionId);
@@ -130,6 +138,7 @@ public class TransactionContextHolder {
     }
 
     public void updateChannelPaymentRequest(String transactionId, TransactionChannelRequestDTO request) {
+        updateChannelClientRefCache(request.getClientRefId(), transactionId);
         TransactionCacheContext transactionCacheContext = transactionContextCache.get(transactionId);
 
         Party payer = request.getPayer();
@@ -229,6 +238,7 @@ public class TransactionContextHolder {
 
     public void updateSwitchTransactionRequest(String transactionId, TransactionRole sourceRole, TransactionRequestSwitchRequestDTO request) {
         TransactionCacheContext transactionCacheContext = getOrCreateTransactionCacheContext(transactionId);
+        updateChannelClientRefCache(request.getExtensionValue(ContextUtil.EXTENSION_KEY_CHANNEL_CLIENT_REF), transactionId);
 
         updatePartyCache(transactionCacheContext, TransactionRole.PAYER, request.getPayer());
         Party payee = request.getPayee();
@@ -244,6 +254,7 @@ public class TransactionContextHolder {
 
     public void updateSwitchQuoteRequest(String transactionId, TransactionRole sourceRole, QuoteSwitchRequestDTO request, FspId sourceFsp, FspId destFsp) {
         TransactionCacheContext transactionCacheContext = getOrCreateTransactionCacheContext(transactionId);
+        updateChannelClientRefCache(request.getExtensionValue(ContextUtil.EXTENSION_KEY_CHANNEL_CLIENT_REF), transactionId);
 
         Party payer = request.getPayer();
         updatePartyCache(transactionCacheContext, TransactionRole.PAYER, payer == null ? null : payer.getPartyIdInfo());
@@ -260,6 +271,7 @@ public class TransactionContextHolder {
 
     public void updateSwitchTransferRequest(String transactionId, TransactionRole sourceRole, TransferSwitchRequestDTO request, Ilp ilp, FspId sourceFsp, FspId destFsp) {
         TransactionCacheContext transactionCacheContext = getOrCreateTransactionCacheContext(transactionId);
+        updateChannelClientRefCache(request.getExtensionValue(ContextUtil.EXTENSION_KEY_CHANNEL_CLIENT_REF), transactionId);
 
         String payer = request.getPayerFsp();
         updatePartyCache(transactionCacheContext, TransactionRole.PAYER, payer);

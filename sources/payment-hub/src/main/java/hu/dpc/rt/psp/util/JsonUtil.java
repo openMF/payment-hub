@@ -22,22 +22,18 @@ public class JsonUtil {
 
 
     public static String toJson(Object pojo) {
-
         try {
             return mapper.writeValueAsString(pojo);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(String.format("Error while mapping from POJO (%s) to JSON string!", pojo.getClass()), e);
         }
-
     }
 
     public static <T extends Object> T toPojo(String json, Class<T> type) {
-
         try {
             return mapper.readValue(json, type);
         } catch (IOException e) {
             throw new RuntimeException(String.format("Error while mapping from JSON string to POJO (%s)!", type), e);
         }
-
     }
 }

@@ -36,7 +36,7 @@ public class TransactionRequestSwitchProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        // add transaction id to the extension list EXTENSION_TRANSACTION_ID
+        // add transaction id to the extension list EXTENSION_KEY_TRANSACTION_ID
         throw new RuntimeException("Call /transactionRequest is not supported yet");
     }
 }

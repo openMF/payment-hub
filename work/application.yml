@@ -26,7 +26,7 @@ iban-settings:
 hub-settings:
   instance: in01
   expiration: 30000
-  tenants: tn03, tn04
+  tenants: tn01, tn02
 
 channel-settings:
   cors-enabled: true
@@ -37,9 +37,9 @@ channel-settings:
   - name: operation-basic-settings
     host: http://localhost
     tenants:
-    - name: tn03
+    - name: tn01
       port: 48888
-    - name: tn04
+    - name: tn02
       port: 48889
   - name: quotes #post notification
     base: interoperation/quotes
@@ -115,9 +115,9 @@ switch-settings:
   - name: binding-basic-settings
     host: http://0.0.0.0
     tenants:
-    - name: tn03
+    - name: tn01
       port: 58180
-    - name: tn04
+    - name: tn02
       port: 58181
   - name: participants
     base: switch/participants

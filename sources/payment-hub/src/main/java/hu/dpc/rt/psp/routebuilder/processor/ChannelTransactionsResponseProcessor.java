@@ -39,8 +39,8 @@ public class ChannelTransactionsResponseProcessor implements Processor {
         String transactionId = exchange.getProperty(ExchangeHeader.TRANSACTION_ID.getKey(), String.class);
         TransactionCacheContext transactionContext = transactionContextHolder.getTransactionContext(transactionId);
 
-        TransactionChannelAsyncResponseDTO paymentAsyncResponseDTO = new TransactionChannelAsyncResponseDTO(transactionContext.getChannelClientRef(),
-                transactionId, transactionContext.getCompletedStamp(), transactionContext.getTransferState(), transactionContext.getPaymentRequestDTO());
+        TransactionChannelAsyncResponseDTO paymentAsyncResponseDTO = new TransactionChannelAsyncResponseDTO(transactionContext.getChannelClientRef(), transactionId,
+                transactionContext.getCompletedStamp(), transactionContext.getTransferId(), transactionContext.getTransferState(), transactionContext.getPaymentRequestDTO());
 
         channelRestClient.callPaymentAsyncResponse(paymentAsyncResponseDTO, exchange.getProperty(ExchangeHeader.CURRENT_FSP_ID.getKey(), FspId.class));
     }

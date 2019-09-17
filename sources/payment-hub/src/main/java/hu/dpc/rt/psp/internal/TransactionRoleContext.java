@@ -29,12 +29,16 @@ import hu.dpc.rt.psp.type.TransactionRole;
 import hu.dpc.rt.psp.type.TransactionState;
 import hu.dpc.rt.psp.type.TransferState;
 import hu.dpc.rt.psp.util.ContextUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionRoleContext {
+
+    private static Logger logger = LoggerFactory.getLogger(TransactionRoleContext.class);
 
     private TransactionRole role;
     private PartyContext partyContext;
@@ -89,7 +93,7 @@ public class TransactionRoleContext {
     }
 
     public FspId getFspId() {
-        return partyContext.getFspId();
+        return partyContext == null ? null : partyContext.getFspId();
     }
 
     public void setFspId(FspId fspId) {
@@ -134,18 +138,20 @@ public class TransactionRoleContext {
     }
 
     TransactionAction addAction(TransactionAction action, boolean strict) {
+        logger.debug("Action " + action + " on " + this);
         TransactionAction lastAction = getLastAction();
         if (lastAction == action && !strict)
             return lastAction;
 
         TransactionAction newAction = handleTransition(lastAction, action);
         if (lastAction != newAction) {
+            logger.info("New action " + action + " on " + this);
             TransactionState transactionState = TransactionState.forAction(newAction);
-            if (transactionState != null)
-                this.transactionState = transactionState;
+            if (transactionState != null && this.transactionState != transactionState)
+                setTransactionState(transactionState);
             TransferState transferState = TransferState.forAction(newAction);
-            if (transferState != null)
-                this.transferState = transferState;
+            if (transferState != null && this.transferState != transferState)
+                setTransferState(transferState);
         }
         return newAction;
     }
@@ -175,6 +181,7 @@ public class TransactionRoleContext {
     }
 
     void setTransactionState(TransactionState transactionState) {
+        logger.info("Change transaction state to " + transactionState + " on " + this);
         this.transactionState = transactionState;
     }
 
@@ -183,6 +190,7 @@ public class TransactionRoleContext {
     }
 
     void setTransferState(TransferState transferState) {
+        logger.info("Change transfer state to " + transferState + " on " + this);
         this.transferState = transferState;
     }
 
@@ -356,5 +364,15 @@ public class TransactionRoleContext {
         setSwitchTransferDTO(response);
         addAction(response.getTransferState() == TransferState.ABORTED ? TransactionAction.COMMIT_FAILED : TransactionAction.COMMIT, false);
         setCompletedStamp(completedStamp == null ? LocalDateTime.now() : completedStamp);
+    }
+
+    @Override
+    public String toString() {
+        return "TransactionRoleContext{" +
+                role +
+                ", " + getFspId() +
+                ", transaction:" + transactionState +
+                ", transfer:" + transferState +
+                '}';
     }
 }

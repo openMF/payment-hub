@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static hu.dpc.rt.psp.type.TransactionRole.PAYEE;
 import static hu.dpc.rt.psp.type.TransactionRole.PAYER;
-import static hu.dpc.rt.psp.util.ContextUtil.EXTENSION_TRANSACTION_ID;
+import static hu.dpc.rt.psp.util.ContextUtil.*;
 
 /**
  * List of GET, POST endpoints which were originated from the other side FSP and were sent through the switch.
@@ -131,7 +131,7 @@ public class SwitchRequestRouteBuilder extends RouteBuilder {
                     TransactionRequestSwitchRequestDTO requestDTO = in.getBody(TransactionRequestSwitchRequestDTO.class);
                     logger.debug(String.format("Incoming transaction switch post request: %s", JsonUtil.toJson(requestDTO)));
 
-                    String transactionId = requestDTO.getExtension(EXTENSION_TRANSACTION_ID).getValue();
+                    String transactionId = requestDTO.getExtensionValue(EXTENSION_KEY_TRANSACTION_ID);
 
                     transactionContextHolder.updateSwitchTransactionRequest(transactionId, PAYEE, requestDTO); // sender role
 
@@ -166,6 +166,16 @@ public class SwitchRequestRouteBuilder extends RouteBuilder {
                     String transactionId = requestDTO.getTransactionId();
                     FspId sourceFsp = ContextUtil.parseFspId(in.getHeader(switchSettings.getHeader(SwitchSettings.SwitchHeader.SOURCE).getKey(), String.class));
                     FspId destFsp = ContextUtil.parseFspId(in.getHeader(switchSettings.getHeader(SwitchSettings.SwitchHeader.DESTINATION).getKey(), String.class));
+
+                    String note = requestDTO.getNote();
+                    if (note != null) {
+                        int idx = note.indexOf(EXTENSION_SEPARATOR);
+                        if (idx > -1) {
+                            String channelClientRef = note.substring(idx + EXTENSION_SEPARATOR.length());
+                            requestDTO.setNote(note.substring(0, idx));
+                            requestDTO.addExtension(EXTENSION_KEY_CHANNEL_CLIENT_REF, channelClientRef);
+                        }
+                    }
                     transactionContextHolder.updateSwitchQuoteRequest(transactionId, PAYER, requestDTO, sourceFsp, destFsp); // sender role
 
                     TransactionCacheContext transactionContext = transactionContextHolder.getTransactionContext(transactionId);
@@ -225,7 +235,6 @@ public class SwitchRequestRouteBuilder extends RouteBuilder {
                 .to("direct:commitFspTransfer")
         ;
     }
-
 
     private void buildPartiesRoute(String tenant) {
         TenantProperties binding = switchSettings.getBinding(SwitchSettings.SwitchBinding.PARTIES, tenant);
