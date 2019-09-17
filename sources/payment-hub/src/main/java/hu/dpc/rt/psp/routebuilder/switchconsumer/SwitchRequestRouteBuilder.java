@@ -39,9 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static hu.dpc.rt.psp.type.TransactionRole.PAYEE;
 import static hu.dpc.rt.psp.type.TransactionRole.PAYER;
-import static hu.dpc.rt.psp.util.ContextUtil.EXTENSION_KEY_CHANNEL_CLIENT_REF;
-import static hu.dpc.rt.psp.util.ContextUtil.EXTENSION_KEY_TRANSACTION_ID;
-import static hu.dpc.rt.psp.util.ContextUtil.EXTENSION_SEPARATOR;
+import static hu.dpc.rt.psp.util.ContextUtil.*;
 
 /**
  * List of GET, POST endpoints which were originated from the other side FSP and were sent through the switch.
@@ -237,7 +235,6 @@ public class SwitchRequestRouteBuilder extends RouteBuilder {
                 .to("direct:commitFspTransfer")
         ;
     }
-
 
     private void buildPartiesRoute(String tenant) {
         TenantProperties binding = switchSettings.getBinding(SwitchSettings.SwitchBinding.PARTIES, tenant);
