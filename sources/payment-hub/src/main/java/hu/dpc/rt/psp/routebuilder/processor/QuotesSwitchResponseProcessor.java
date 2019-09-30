@@ -55,14 +55,15 @@ public class QuotesSwitchResponseProcessor implements Processor {
 
         BigDecimal transactionAmount = transactionContext.getTransactionAmount();
         BigDecimal transferAmount = transactionContext.getTransferAmount();
-        MoneyData fee = payeeContext.getFee();
-        MoneyData commission = payeeContext.getCommission();
+        String currency = transactionContext.getCurrency();
+
+        MoneyData fee = payeeContext.getFee() == null ? new MoneyData("0", currency) : payeeContext.getFee();
+        MoneyData commission = payeeContext.getCommission() == null ? new MoneyData("0", currency) : payeeContext.getCommission();
 
         BigDecimal payeeReceiveAmount = transactionContext.getAmountType() == AmountType.RECEIVE
                 ? transactionAmount
                 : transferAmount.add(commission.getAmountDecimal()).subtract(fee.getAmountDecimal());
 
-        String currency = transactionContext.getCurrency();
         Ilp ilp = ilpBuilderDpc.build(transactionId, transactionContext.getQuoteId(), transactionAmount, currency,
                 payerContext.getPartyContext().getParty(), payeeContext.getPartyContext().getParty(), transferAmount);
         transactionContextHolder.registerIlp(transactionId, ilp);

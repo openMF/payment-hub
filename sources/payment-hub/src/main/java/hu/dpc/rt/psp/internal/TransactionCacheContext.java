@@ -421,7 +421,8 @@ public class TransactionCacheContext {
         if (oExpiration != null && oExpiration.isBefore(expiration))
             expiration = oExpiration;
 
-        if (expiration.isBefore(LocalDateTime.now(ZoneId.of("UTC")))) //TODO change to dynamic timer and based on 'expiration' property setting
+        // Note: The new quoting service is sending back expiration in local time.
+        if (expiration.isBefore(LocalDateTime.now())) //TODO change to dynamic timer and based on 'expiration' property setting
             throw new RuntimeException("Validity of request " + transactionId + " expired");
     }
 
