@@ -84,7 +84,7 @@ public class ChannelStatusRequestRouteBuilder extends RouteBuilder {
                         throw new RuntimeException("Not found transaction by id " + transactionId);
 
                     TransactionChannelAsyncResponseDTO paymentAsyncResponseDTO = new TransactionChannelAsyncResponseDTO(transactionContext.getChannelClientRef(),
-                            transactionId, transactionContext.getCompletedStamp(), transactionContext.getTransferState(),
+                            transactionId, transactionContext.getCompletedStamp(), transactionContext.getTransferId(), transactionContext.getTransferState(),
                             transactionContext.getPaymentRequestDTO());
 
                     exchange.getIn().setBody(paymentAsyncResponseDTO);
@@ -120,9 +120,8 @@ public class ChannelStatusRequestRouteBuilder extends RouteBuilder {
                     if (transactionContext == null)
                         throw new RuntimeException("Not found transaction by channelClientRef " + channelClientRef);
 
-                    TransactionChannelAsyncResponseDTO paymentAsyncResponseDTO = new TransactionChannelAsyncResponseDTO(channelClientRef,
-                            transactionContext.getTransactionId(), transactionContext.getCompletedStamp(), transactionContext.getTransferState(),
-                            transactionContext.getPaymentRequestDTO());
+                    TransactionChannelAsyncResponseDTO paymentAsyncResponseDTO = new TransactionChannelAsyncResponseDTO(channelClientRef, transactionContext.getTransactionId(),
+                            transactionContext.getCompletedStamp(), transactionContext.getTransferId(), transactionContext.getTransferState(), transactionContext.getPaymentRequestDTO());
 
                     exchange.getIn().setBody(paymentAsyncResponseDTO);
                 })

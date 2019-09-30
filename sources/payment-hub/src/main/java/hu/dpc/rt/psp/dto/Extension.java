@@ -9,14 +9,22 @@ package hu.dpc.rt.psp.dto;
 
 public class Extension {
 
-    private String key;
-    private String value;
+    private String key; // mandatory, String(1..32)
+    private String value; // mandatory, String(1..128)
+
+    Extension() {
+    }
+
+    public Extension(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
 
     public String getKey() {
         return key;
     }
 
-    public void setKey(String key) {
+    void setKey(String key) {
         this.key = key;
     }
 

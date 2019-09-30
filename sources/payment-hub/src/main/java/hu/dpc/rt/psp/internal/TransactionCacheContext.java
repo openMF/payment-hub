@@ -34,10 +34,12 @@ import hu.dpc.rt.psp.util.ContextUtil;
 import hu.dpc.rt.psp.util.UUIDUtil;
 import org.apache.camel.Exchange;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +82,7 @@ public class TransactionCacheContext {
         return transactionId;
     }
 
-    public void setTransactionId(String transactionId) {
+    void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
     }
 
@@ -92,6 +94,12 @@ public class TransactionCacheContext {
         return channelClientRef;
     }
 
+    void setChannelClientRef(String channelClientRef) {
+        if (this.channelClientRef != null && !this.channelClientRef.equals(channelClientRef))
+            throw new RuntimeException("Attempt to change Channel Client Ref Id from " + this.channelClientRef + " to " + channelClientRef);
+        this.channelClientRef = channelClientRef;
+    }
+
     public String getTransactionRequestId() {
         return transactionRequestId;
     }
@@ -101,6 +109,8 @@ public class TransactionCacheContext {
     }
 
     void setTransactionRequestId(String transactionRequestId) {
+        if (this.transactionRequestId != null && !this.transactionRequestId.equals(transactionRequestId))
+            throw new RuntimeException("Attempt to change Transaction Request Id from " + this.transactionRequestId + " to " + transactionRequestId);
         this.transactionRequestId = transactionRequestId;
     }
 
@@ -113,6 +123,8 @@ public class TransactionCacheContext {
     }
 
     void setQuoteId(String quoteId) {
+        if (this.quoteId != null && !this.quoteId.equals(quoteId))
+            throw new RuntimeException("Attempt to change Quote Id from " + this.quoteId + " to " + quoteId);
         this.quoteId = quoteId;
     }
 
@@ -125,6 +137,8 @@ public class TransactionCacheContext {
     }
 
     void setTransferId(String transferId) {
+        if (this.transferId != null && !this.transferId.equals(transferId))
+            throw new RuntimeException("Attempt to change Transfer Id from " + this.transferId + " to " + transferId);
         this.transferId = transferId;
     }
 
@@ -230,15 +244,22 @@ public class TransactionCacheContext {
     }
 
     public LocalDateTime getCompletedStamp() {
-        return getRoleContext(TransactionRole.PAYER).getCompletedStamp();
+        LocalDateTime stamp1 = getRoleContext(TransactionRole.PAYER).getCompletedStamp();
+        LocalDateTime stamp2 = getRoleContext(TransactionRole.PAYEE).getCompletedStamp();
+        return stamp1 == null ? stamp2 : (stamp2 == null ? stamp1 : (stamp1.isBefore(stamp2) ? stamp2 : stamp1));
     }
 
+    @NotNull
     public TransactionState getTransactionState() {
-        return getRoleContext(TransactionRole.PAYER).getTransactionState();
+        TransactionState state1 = getRoleContext(TransactionRole.PAYER).getTransactionState();
+        TransactionState state2 = getRoleContext(TransactionRole.PAYEE).getTransactionState();
+        return state1.ordinal() < state2.ordinal() ? state1 : state2;
     }
 
     public TransferState getTransferState() {
-        return getRoleContext(TransactionRole.PAYER).getTransferState();
+        TransferState state1 = getRoleContext(TransactionRole.PAYER).getTransferState();
+        TransferState state2 = getRoleContext(TransactionRole.PAYEE).getTransferState();
+        return state1 == null ? state2 : (state2 == null ? state1 : (state1.ordinal() < state2.ordinal() ? state1 : state2));
     }
 
     public List<Extension> getExtensionList() {
@@ -247,6 +268,42 @@ public class TransactionCacheContext {
 
     void setExtensionList(List<Extension> extensionList) {
         this.extensionList = extensionList;
+    }
+
+    Extension getExtension(@NotNull String key) {
+        if (extensionList == null)
+            return null;
+        for (Extension extension : extensionList) {
+            if (key.equals(extension.getKey()))
+                return extension;
+        }
+        return null;
+    }
+
+    boolean hasExtension(@NotNull String key) {
+        return getExtension(key) != null;
+    }
+
+    /**
+     * @return previous value or null
+     */
+    String addExtension(@NotNull String key, String value) {
+        Extension extension = getExtension(key);
+        String prevValue = null;
+
+        if (extension == null) {
+            List<Extension> eL = this.extensionList;
+            if (eL == null) {
+                eL = new ArrayList<>(1);
+            }
+            eL.add(new Extension(key, value));
+            this.extensionList = eL;
+        }
+        else {
+            prevValue = extension.getValue();
+            extension.setValue(value);
+        }
+        return prevValue;
     }
 
     public Map<TransactionRole, TransactionRoleContext> getRoleContexts() {
@@ -288,7 +345,8 @@ public class TransactionCacheContext {
 
     public void updateChannelPaymentRequest(TransactionChannelRequestDTO request) {
         this.paymentRequestDTO = request;
-        channelClientRef = request.getClientRefId();
+        String clientRefId = request.getClientRefId();
+        setChannelClientRef(clientRefId);
         setAmountType(request.getAmountType());
         updateAmounts(request.getAmount());
         transactionType = request.getTransactionType();
@@ -297,6 +355,9 @@ public class TransactionCacheContext {
         LocalDateTime oExpiration = request.getExpirationDate();
         this.expiration = oExpiration == null ? LocalDateTime.now().plus(5, ChronoUnit.MINUTES) : oExpiration; // TODO: use property
         extensionList = request.getExtensionList();
+//        if (clientRefId != null) { //TODO mojaloop refuses extensionList
+//            addExtension(ContextUtil.EXTENSION_KEY_CHANNEL_CLIENT_REF, clientRefId);
+//        }
         for (TransactionRoleContext roleContext : roleContexts.values()) {
             roleContext.updatePaymentRequest(request);
         }
@@ -338,6 +399,10 @@ public class TransactionCacheContext {
         setExpiration(request.getExpiration());
         setExtensionList(request.getExtensionList());
         updateExpiration(request.getExpiration());
+        Extension extension = getExtension(ContextUtil.EXTENSION_KEY_CHANNEL_CLIENT_REF);
+        if (extension != null) {
+            setChannelClientRef(extension.getValue());
+        }
 
         getRoleContext(sourceRole).updateSwitchTransactionRequest(request);
         getRoleContext(TransactionRole.PAYER).updateParty(request.getPayer()); // source must be the PAYEE
@@ -359,8 +424,12 @@ public class TransactionCacheContext {
         setNote(request.getNote());
         setGeoCode(request.getGeoCode());
         setExpiration(request.getExpirationDate());
-        setExtensionList(request.getExtensionList());
+//        setExtensionList(request.getExtensionList());
         updateExpiration(request.getExpirationDate());
+        Extension extension = request.getExtension(ContextUtil.EXTENSION_KEY_CHANNEL_CLIENT_REF);
+        if (extension != null) {
+            setChannelClientRef(extension.getValue());
+        }
 
         getRoleContext(sourceRole).updateSwitchQuoteRequest(request, sourceFsp, destFsp);
         // source must be the PAYER
@@ -386,6 +455,10 @@ public class TransactionCacheContext {
         setExtensionList(request.getExtensionList());
         updateExpiration(request.getExpirationDate());
         updateIlp(ilp);
+        Extension extension = getExtension(ContextUtil.EXTENSION_KEY_CHANNEL_CLIENT_REF);
+        if (extension != null) {
+            setChannelClientRef(extension.getValue());
+        }
 
         getRoleContext(sourceRole).updateSwitchTransferRequest(request, ilp, sourceFsp, destFsp);
         // source must be the PAYER

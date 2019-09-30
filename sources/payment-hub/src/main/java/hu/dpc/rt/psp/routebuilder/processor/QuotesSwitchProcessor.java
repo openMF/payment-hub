@@ -22,6 +22,8 @@ import org.apache.camel.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static hu.dpc.rt.psp.util.ContextUtil.EXTENSION_SEPARATOR;
+
 /**
  * Processor to send POST /quotes request to the other side FSP through interoperable switch.
  */
@@ -67,10 +69,16 @@ public class QuotesSwitchProcessor implements Processor {
         String quoteId = transactionContext.getOrCreateQuoteId();
 
         MoneyData amount = new MoneyData(transactionContext.getTransactionAmount(), transactionContext.getCurrency());
+
+        String channelClientRef = transactionContext.getChannelClientRef();
+        String note = transactionContext.getNote();
+        if (channelClientRef != null) { // TODO: hack, send in extensionList
+            note = (note == null ? "" : note) + EXTENSION_SEPARATOR + channelClientRef;
+        }
         QuoteSwitchRequestDTO request = new QuoteSwitchRequestDTO(transactionId, transactionContext.getTransactionRequestId(),
                 quoteId, destContext.getPartyContext().getParty(), sourceContext.getPartyContext().getParty(), transactionContext.getAmountType(),
                 amount, sourceContext.getFee(), transactionContext.getTransactionType(), transactionContext.getGeoCode(),
-                transactionContext.getNote(), transactionContext.getExpiration(), transactionContext.getExtensionList());
+                note, transactionContext.getExpiration(), transactionContext.getExtensionList());
 
         switchRestClient.callPostQuotes(request, sourceContext.getFspId(), destContext.getFspId());
     }

@@ -26,17 +26,19 @@ public class TransactionChannelAsyncResponseDTO {
     private String clientRefId;
     private String transactionId;
     private String completedTimestamp;
+    private String transferId;
     private TransferState transferState;
     private TransactionChannelRequestDTO originalRequestData;
 
     TransactionChannelAsyncResponseDTO() {
     }
 
-    public TransactionChannelAsyncResponseDTO(String clientRefId, String transactionId, LocalDateTime completedTimestamp, TransferState transferState,
+    public TransactionChannelAsyncResponseDTO(String clientRefId, String transactionId, LocalDateTime completedTimestamp, String transferId, TransferState transferState,
                                               TransactionChannelRequestDTO originalRequestData) {
         this.clientRefId = clientRefId;
         this.transactionId = transactionId;
         this.completedTimestamp = ContextUtil.formatDate(completedTimestamp);
+        this.transferId = transferId;
         this.transferState = transferState;
         this.originalRequestData = originalRequestData;
     }
@@ -72,6 +74,14 @@ public class TransactionChannelAsyncResponseDTO {
 
     public void setCompletedTimestamp(LocalDateTime completedTimestamp) {
         this.completedTimestamp = ContextUtil.formatDate(completedTimestamp);
+    }
+
+    public String getTransferId() {
+        return transferId;
+    }
+
+    public void setTransferId(String transferId) {
+        this.transferId = transferId;
     }
 
     public TransferState getTransferState() {
