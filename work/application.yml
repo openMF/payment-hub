@@ -26,7 +26,7 @@ iban-settings:
 hub-settings:
   instance: in01
   expiration: 30000
-  tenants: tn03, tn04
+  tenants: tn01, tn02
 
 channel-settings:
   cors-enabled: true
@@ -35,11 +35,11 @@ channel-settings:
     key: X-Tenant-Identifier
   operations: #hub -> channel
   - name: operation-basic-settings
-    host: http://localhost
+    host: https://fineract.mifos.io
     tenants:
-    - name: tn03
+    - name: tn01
       port: 48888
-    - name: tn04
+    - name: tn02
       port: 48889
   - name: quotes #post notification
     base: interoperation/quotes
@@ -49,8 +49,8 @@ channel-settings:
     base: interoperation/transactions
   bindings: #channel -> hub
   - name: binding-basic-settings
-    host: http://0.0.0.0 #http://payments.dpc.hu:80
-    port: 58080 #80
+    host: http://0.0.0.0
+    port: 80
   - name: parties
     base: channel/parties
   - name: payment #post payment request
@@ -75,8 +75,8 @@ fsp-settings:
   - name: operation-basic-settings
     user: mifos
     password: password
-    host: http://localhost
-    port: 8080
+    host: https://fineract.mifos.io
+    port: 8443
   - name: auth #login
     base: fineract-provider/api/v1/authentication
   - name: requests
@@ -97,17 +97,21 @@ switch-settings:
     key: FSPIOP-Destination
   operations: #hub -> switch post and put
   - name: operation-basic-settings
-    host: http://interop-switch.local
-    port: #80
+    host: http://account-lookup-service.local
+    port: 80
   - name: participants #post participant registration
-    host: http://central-ledger.local
-    base: interop/switch/v1/participants
+    base: participants
   - name: parties #get, put parties
-    base: interop/switch/v1/parties
+    base: parties
+  - name: oracles #get, post oracles
+    host: http://account-lookup-service-admin.local
+    base: oracles
   - name: requests
-    base: interop/switch/v1/transactionRequests
+    host: http://ml-api-adapter.local
+    base: transactionRequests
   - name: quotes #post, put quotes
-    base: interop/switch/v1/quotes
+    host: http://quoting-service.local
+    base: quotes
   - name: transfers #post, put transfers
     host: http://ml-api-adapter.local
     base: transfers
@@ -115,16 +119,14 @@ switch-settings:
   - name: binding-basic-settings
     host: http://0.0.0.0
     tenants:
-    - name: tn03
+    - name: tn01
       port: 58180
-    - name: tn04
+    - name: tn02
       port: 58181
   - name: participants
     base: switch/participants
   - name: parties
     base: switch/parties
-  - name: participants
-    base: switch/participants
   - name: requests
     base: switch/transactionRequests
   - name: quotes
