@@ -45,17 +45,13 @@ public class RestClient {
     }
 
     public String call(String endpointUrl, HttpMethod httpMethod, Map<String, String> headers, String body) {
-        return call(endpointUrl, httpMethod, headers, body, true);
-    }
-
-    public String call(String endpointUrl, HttpMethod httpMethod, Map<String, String> headers, String body, boolean setAccept) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        if (setAccept) {
+        // If it is a PUT request, it will throw an error if the 'accept' or 'accept-charset' headers are set
+        // RestTemplate sets accept-charset, accept, and accept-encoding by default, so get rid of them
+        if (httpMethod != HttpMethod.PUT) {
             httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         } else {
-            // The quoting service will throw an error if the 'accept' or 'accept-charset' headers are set
-            // RestTemplate sets accept-charset, accept, and accept-encoding by default, so get rid of them
             restTemplate.setInterceptors(Arrays.asList(new RestTemplateHeaderModifierInterceptor()));
         }
 
@@ -67,7 +63,7 @@ public class RestClient {
 
         String res = restTemplate.exchange(endpointUrl, httpMethod, entity, String.class).getBody();
 
-        if (!setAccept) {
+        if (httpMethod == HttpMethod.PUT) {
             // Reset so that we aren't messing with headers after this request
             List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
             restTemplate.setInterceptors(interceptors);
