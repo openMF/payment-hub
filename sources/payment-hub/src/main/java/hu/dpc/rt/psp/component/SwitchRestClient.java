@@ -101,7 +101,7 @@ public class SwitchRestClient {
 
         Map<String, String> headers = getHeaders(sourceFspId, destFspId);
 
-        restClient.call(url, HttpMethod.PUT, headers, JsonUtil.toJson(response), false);
+        restClient.call(url, HttpMethod.PUT, headers, JsonUtil.toJson(response));
     }
 
     public void callPostTransferCommit(TransferSwitchRequestDTO request, FspId sourceFspId, FspId destFspId) {
