@@ -49,7 +49,7 @@ public class TransfersSwitchResponseProcessor implements Processor {
         TransactionRoleContext payerContext = transactionContext.getRoleContext(TransactionRole.PAYER);
 
 
-        LocalDateTime localDateTime = ZonedDateTime.parse("2019-02-19T14:27:52.827Z", DateTimeFormatter.ISO_OFFSET_DATE_TIME).toLocalDateTime();
+        LocalDateTime localDateTime = LocalDateTime.now();
         TransferSwitchResponseDTO response = new TransferSwitchResponseDTO(transactionContext.getIlp().getFulfilment(),
                 localDateTime, TransferState.COMMITTED, transactionContext.getExtensionList());
 

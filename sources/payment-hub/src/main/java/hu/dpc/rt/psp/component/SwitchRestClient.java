@@ -122,7 +122,6 @@ public class SwitchRestClient {
         String url = operation.getUrl() + '/' + transferId;
 
         Map<String, String> headers = getHeaders(sourceFspId, destFspId);
-        headers.put(HttpHeader.ACCEPT.asString(), "application/vnd.interoperability.parties+json;version=1");
         headers.put(HttpHeader.CONTENT_TYPE.asString(), "application/vnd.interoperability.parties+json;version=1.0");
 
         restClient.call(url, HttpMethod.PUT, headers, JsonUtil.toJson(response));
@@ -136,6 +135,7 @@ public class SwitchRestClient {
             headers.put(switchSettings.getHeader(SwitchSettings.SwitchHeader.SOURCE).getKey(), sourceFspId.getId());
         if (destFspId != null)
             headers.put(switchSettings.getHeader(SwitchSettings.SwitchHeader.DESTINATION).getKey(), destFspId.getId());
+
         return headers;
     }
 }
