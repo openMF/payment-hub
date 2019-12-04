@@ -24,9 +24,9 @@ iban-settings:
   fsp-tenant-id-length: 4
 
 hub-settings:
-  instance: in01
+  instance: in02
   expiration: 30000
-  tenants: tn01, tn02
+  tenants: tn03, tn04
 
 channel-settings:
   cors-enabled: true
@@ -37,9 +37,9 @@ channel-settings:
   - name: operation-basic-settings
     host: https://fineract.mifos.io
     tenants:
-    - name: tn01
+    - name: tn03
       port: 48888
-    - name: tn02
+    - name: tn04
       port: 48889
   - name: quotes #post notification
     base: interoperation/quotes
@@ -119,9 +119,9 @@ switch-settings:
   - name: binding-basic-settings
     host: http://0.0.0.0
     tenants:
-    - name: tn01
+    - name: tn03
       port: 58180
-    - name: tn02
+    - name: tn04
       port: 58181
   - name: participants
     base: switch/participants

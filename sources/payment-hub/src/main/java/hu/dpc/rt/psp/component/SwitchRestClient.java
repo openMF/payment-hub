@@ -64,6 +64,8 @@ public class SwitchRestClient {
         String url = operation.getUrl() + '/' + idType + '/' + idValue + (Strings.isEmpty(subIdOrType) ? "" : ('/' + subIdOrType));
 
         Map<String, String> headers = getHeaders(sourceFspId, null);
+        headers.put(HttpHeader.CONTENT_TYPE.asString(), "application/vnd.interoperability.parties+json;version=1.0");
+        headers.put(HttpHeader.ACCEPT.asString(), "application/vnd.interoperability.parties+json;version=1.0");
 
         restClient.call(url, HttpMethod.GET, headers, null);
     }
@@ -73,6 +75,8 @@ public class SwitchRestClient {
         TenantProperties operation = switchSettings.getOperation(SwitchSettings.SwitchOperation.PARTIES, tenant);
 
         Map<String, String> headers = getHeaders(sourceFspId, destFspId);
+        headers.put(HttpHeader.CONTENT_TYPE.asString(), "application/vnd.interoperability.parties+json;version=1.0");
+        headers.put(HttpHeader.ACCEPT.asString(), "application/vnd.interoperability.parties+json;version=1.0");
 
         PartyIdInfo idInfo = response.getParty().getPartyIdInfo();
         IdentifierType idType = idInfo.getPartyIdType();
@@ -90,6 +94,8 @@ public class SwitchRestClient {
         String url = operation.getUrl();
 
         Map<String, String> headers = getHeaders(sourceFspId, destFspId);
+        headers.put(HttpHeader.CONTENT_TYPE.asString(), "application/vnd.interoperability.quotes+json;version=1.0");
+        headers.put(HttpHeader.ACCEPT.asString(), "application/vnd.interoperability.quotes+json;version=1.0");
 
         restClient.call(url, HttpMethod.POST, headers, JsonUtil.toJson(request));
     }
@@ -100,6 +106,8 @@ public class SwitchRestClient {
         String url = operation.getUrl() + '/' + quoteId;
 
         Map<String, String> headers = getHeaders(sourceFspId, destFspId);
+        headers.put(HttpHeader.CONTENT_TYPE.asString(), "application/vnd.interoperability.quotes+json;version=1.0");
+        headers.put(HttpHeader.ACCEPT.asString(), "application/vnd.interoperability.quotes+json;version=1.0");
 
         restClient.call(url, HttpMethod.PUT, headers, JsonUtil.toJson(response));
     }
