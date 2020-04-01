@@ -1,11 +1,12 @@
-package hu.dpc.rt.psp.util;
+package org.openmf.psp.util;
 
-import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.http.client.ClientHttpRequestExecution;
-import org.springframework.http.client.ClientHttpResponse;
 import java.io.IOException;
-import org.springframework.http.HttpRequest;
+
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.client.ClientHttpRequestExecution;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.client.ClientHttpResponse;
 
 public class RestTemplateHeaderModifierInterceptor
         implements ClientHttpRequestInterceptor {

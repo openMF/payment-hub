@@ -34,6 +34,8 @@ import org.openmf.psp.mojaloop.type.TransferState;
 import org.openmf.psp.type.TransactionRequestState;
 import org.openmf.psp.type.TransactionRole;
 import org.openmf.psp.util.ContextUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TransactionRoleContext {
 

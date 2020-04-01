@@ -65,7 +65,7 @@ fsp-settings:
   auth:
     profile: BASIC
     encode: NONE
-    login-class: hu.dpc.rt.psp.dto.fsp.LoginFineractXResponseDTO
+    login-class: org.openmf.psp.dto.fsp.LoginFineractXResponseDTO
   headers:
   - name: user
     key: User
@@ -88,51 +88,30 @@ fsp-settings:
   - name: transfers
     base: fineract-provider/api/v1/interoperation/transfers
 
-switch-settings:
-  integration-enabled: true
-  headers:
-  - name: source
-    key: FSPIOP-Source
-  - name: destination
-    key: FSPIOP-Destination
-  operations: #hub -> switch post and put
+
+ott-settings:
+  cors-enabled: true
+  apikey: u8YfSQNnNsGFAaqRm3sGShpO2ywLRJgs
+  operations: #hub -> ott
   - name: operation-basic-settings
-    host: http://account-lookup-service.local
-    port: 80
-  - name: participants #post participant registration
-    base: participants
-  - name: parties #get, put parties
-    base: parties
-  - name: oracles #get, post oracles
-    host: http://account-lookup-service-admin.local
-    base: oracles
-  - name: requests
-    host: http://ml-api-adapter.local
-    base: transactionRequests
-  - name: quotes #post, put quotes
-    host: http://quoting-service.local
-    base: quotes
-  - name: transfers #post, put transfers
-    host: http://ml-api-adapter.local
-    base: transfers
-  bindings: #switch -> hub post and put
-  - name: binding-basic-settings
-    host: http://0.0.0.0
+    host: https://sandbox.mobilemoneyapi.io/simulator/v1.0/mm
     tenants:
     - name: tn03
-      port: 58180
+      port: 48888
     - name: tn04
-      port: 58181
-  - name: participants
-    base: switch/participants
-  - name: parties
-    base: switch/parties
-  - name: requests
-    base: switch/transactionRequests
-  - name: quotes
-    base: switch/quotes
-  - name: transfers
-    base: switch/transfers
+      port: 48889
+  - name: transactions
+    base: transactions
+  - name: accounts
+    base: accounts
+  bindings: #ott -> hub
+  - name: binding-basic-settings
+    host: http://0.0.0.0
+    port: 58080
+  - name: merchantpayment # post merchant payment
+    base: merchantpayment
+  - name: transfer # post peer-to-peer transfer
+    base: transfer
 
 mock-settings:
   start-channel-consumers: false
