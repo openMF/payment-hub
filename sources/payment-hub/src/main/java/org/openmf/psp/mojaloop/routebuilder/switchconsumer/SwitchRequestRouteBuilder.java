@@ -37,7 +37,7 @@ import org.springframework.http.HttpMethod;
 
 import static org.openmf.psp.type.TransactionRole.PAYEE;
 import static org.openmf.psp.type.TransactionRole.PAYER;
-import static org.openmf.psp.util.ContextUtil.EXTENSION_TRANSACTION_ID;
+import static org.openmf.psp.util.ContextUtil.*;
 
 
 import javax.servlet.http.HttpServletRequest;

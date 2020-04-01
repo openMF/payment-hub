@@ -22,7 +22,7 @@ import org.openmf.psp.type.TransactionRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static hu.dpc.rt.psp.util.ContextUtil.EXTENSION_SEPARATOR;
+import static org.openmf.psp.util.ContextUtil.*;
 
 /**
  * Processor to send POST /quotes request to the other side FSP through interoperable switch.
