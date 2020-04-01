@@ -1,5 +1,5 @@
 # payment-hub
-Repository to house the payment hub for integration with external payment platforms like Mojaloop
+Repository to house the payment hub for integration with external payment schemas like Mojaloop, GSMA and MTN Uganda.
 
 Payment Hub is the component, which connects DFSPs to switches. In our case, it connects Fineract CN to Mojaloop, and Fineract v1.2 to Mojaloop. The Payment Hub communicates with the Fineract versions via REST API. To support the calls and actions, both Fineract versions had to be upgraded.
 
@@ -68,7 +68,7 @@ Navigate to the sources folder in the payment-hub project and run the following:
 
 Copy the paymenthub/sources/payment-hub/target/payment-hub-1.0.0-SNAPSHOT.jar file to your working directory.
 
-Copy the application.yml file to the same working directory, and update its config. It is not included in the build jar file, to make it easily editable.
+Copy the application.yml file from work folder to the same working directory, and update its config. It is not included in the build jar file, to make it easily editable.
 
 
 #### FSP - Fineract 1.X settings
@@ -130,3 +130,30 @@ Copy the application.yml file to the same working directory, and update its conf
         base: /interoperation/v1/quotes
       - name: transfers
         base: /interoperation/v1/transfers
+
+#### OTT - GSMA Settings
+    ott-settings:
+      cors-enabled: true
+      apikey: u8YfSQNnNsGFAaqRm3sGShpO2ywLRJgs
+      operations: #hub -> ott
+      - name: operation-basic-settings
+        host: https://sandbox.mobilemoneyapi.io/simulator/v1.0/mm
+        tenants:
+        - name: tn03
+          port: 48888
+        - name: tn04
+          port: 48889
+      - name: transactions
+        base: transactions
+      - name: accounts
+        base: accounts
+      bindings: #ott -> hub
+      - name: binding-basic-settings
+        host: http://0.0.0.0
+        port: 58080
+      - name: merchantpayment # post merchant payment
+        base: merchantpayment
+      - name: transfer # post peer-to-peer transfer
+        base: transfer
+
+Currently, the basic transaction use cases - Merchant Payment and Peer-To-Peer transfer - have been integrated with the Payment Hub.

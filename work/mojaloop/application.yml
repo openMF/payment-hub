@@ -1,0 +1,140 @@
+#
+#    This Source Code Form is subject to the terms of the Mozilla
+#    Public License, v. 2.0. If a copy of the MPL was not distributed
+#    with this file, You can obtain one at
+#
+#    https://mozilla.org/MPL/2.0/.
+#
+
+debug: true
+
+spring:
+  main:
+    web-application-type: none
+
+# the name of Camel
+camel:
+  springboot:
+    name: RestCamel
+
+iban-settings:
+  fsp-instance-id-first-index: 4
+  fsp-instance-id-length: 4
+  fsp-tenant-id-first-index: 8
+  fsp-tenant-id-length: 4
+
+hub-settings:
+  instance: in02
+  expiration: 30000
+  tenants: tn03, tn04
+
+channel-settings:
+  cors-enabled: true
+  headers:
+  - name: tenant
+    key: X-Tenant-Identifier
+  operations: #hub -> channel
+  - name: operation-basic-settings
+    host: https://fineract.mifos.io
+    tenants:
+    - name: tn03
+      port: 48888
+    - name: tn04
+      port: 48889
+  - name: quotes #post notification
+    base: interoperation/quotes
+  - name: transfers #post notification
+    base: interoperation/transfers
+  - name: response #put async response
+    base: interoperation/transactions
+  bindings: #channel -> hub
+  - name: binding-basic-settings
+    host: http://0.0.0.0
+    port: 80
+  - name: parties
+    base: channel/parties
+  - name: payment #post payment request
+    base: channel/transactions #/in01/channel/transactions
+  - name: status #get status by hub id
+    base: channel/transactions
+  - name: client-status #get status by client id
+    base: channel/transactions/client
+
+fsp-settings:
+  ilp-secret: h4on38bsDjKiat2783gnklgafikmeuu5123kpobb7jm99
+  auth:
+    profile: BASIC
+    encode: NONE
+    login-class: org.openmf.psp.dto.fsp.LoginFineractXResponseDTO
+  headers:
+  - name: user
+    key: User
+  - name: tenant
+    key: Fineract-Platform-TenantId
+  operations: #hub -> fsp
+  - name: operation-basic-settings
+    user: mifos
+    password: password
+    host: https://fineract.mifos.io
+    port: 8443
+  - name: auth #login
+    base: fineract-provider/api/v1/authentication
+  - name: requests
+    base: fineract-provider/api/v1/interoperation/requests
+  - name: parties
+    base: fineract-provider/api/v1/interoperation/parties
+  - name: quotes
+    base: fineract-provider/api/v1/interoperation/quotes
+  - name: transfers
+    base: fineract-provider/api/v1/interoperation/transfers
+
+switch-settings:
+  integration-enabled: true
+  headers:
+  - name: source
+    key: FSPIOP-Source
+  - name: destination
+    key: FSPIOP-Destination
+  operations: #hub -> switch post and put
+  - name: operation-basic-settings
+    host: http://account-lookup-service.local
+    port: 80
+  - name: participants #post participant registration
+    base: participants
+  - name: parties #get, put parties
+    base: parties
+  - name: oracles #get, post oracles
+    host: http://account-lookup-service-admin.local
+    base: oracles
+  - name: requests
+    host: http://ml-api-adapter.local
+    base: transactionRequests
+  - name: quotes #post, put quotes
+    host: http://quoting-service.local
+    base: quotes
+  - name: transfers #post, put transfers
+    host: http://ml-api-adapter.local
+    base: transfers
+  bindings: #switch -> hub post and put
+  - name: binding-basic-settings
+    host: http://0.0.0.0
+    tenants:
+    - name: tn03
+      port: 58180
+    - name: tn04
+      port: 58181
+  - name: participants
+    base: switch/participants
+  - name: parties
+    base: switch/parties
+  - name: requests
+    base: switch/transactionRequests
+  - name: quotes
+    base: switch/quotes
+  - name: transfers
+    base: switch/transfers
+
+mock-settings:
+  start-channel-consumers: false
+  start-switch-consumers: false
+  start-fsp-consumers: false

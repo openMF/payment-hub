@@ -7,12 +7,16 @@
  */
 package org.openmf.psp.mojaloop.cache;
 
+import java.util.HashSet;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
-
 import org.openmf.psp.dto.Party;
 import org.openmf.psp.dto.PartyIdInfo;
 import org.openmf.psp.dto.channel.TransactionChannelRequestDTO;
@@ -34,11 +38,9 @@ import org.openmf.psp.mojaloop.internal.TransactionCacheContext;
 import org.openmf.psp.mojaloop.internal.TransactionRoleContext;
 import org.openmf.psp.type.TransactionRole;
 import org.openmf.psp.util.ContextUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import java.util.HashSet;
 
 @Component
 public class TransactionContextHolder {
