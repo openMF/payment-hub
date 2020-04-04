@@ -49,6 +49,7 @@ public class AccountBalance extends RouteBuilder {
                     exchange.setProperty("transactionType", binding.getName());
                     exchange.setProperty("mainBody", exchange.getIn().getBody(String.class));
                 })
+
                 .unmarshal().json(JsonLibrary.Jackson, BalanceRequest.class)
                 .to("direct:conductTransaction")
         ;

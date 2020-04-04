@@ -1,6 +1,8 @@
 package org.openmf.psp.mpesa.routebuilder.channel;
 
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.dataformat.JsonLibrary;
+import org.openmf.psp.mpesa.config.MPesaSettings;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -35,8 +37,16 @@ public class BaseTransaction extends RouteBuilder {
                 .choice()
                 .when(exchange -> exchange.getProperty("transactionResponseCode", String.class).equals("200"))
                 .log("Transaction was successful")
+                .to("direct:endTransaction")
                 .otherwise()
                 .log("Transaction failed!")
+        ;
+
+        from("direct:endTransaction")
+                .id("endTransaction")
+                .choice()
+                .when(exchange -> exchange.getProperty("transactionType", String.class).equals(MPesaSettings.MPesaBinding.BALANCE))
+                .marshal().json(JsonLibrary.Jackson)
         ;
 
     }
