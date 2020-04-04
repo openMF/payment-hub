@@ -35,7 +35,7 @@ public class AccountBalance extends RouteBuilder {
         BindingProperties binding = mPesaSettings.getBinding(MPesaSettings.MPesaBinding.BALANCE);
         String url = binding.getUrl();
 
-        String consumerEndpoint = ""; //Confirm with Avik
+        String consumerEndpoint = ""; //TODO: Add consumerEndpoint after discussion
 
         from(consumerEndpoint)
                 .id("receive-account-balance-check-request")

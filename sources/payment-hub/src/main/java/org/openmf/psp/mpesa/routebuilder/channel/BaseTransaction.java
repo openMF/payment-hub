@@ -32,6 +32,11 @@ public class BaseTransaction extends RouteBuilder {
                 .id("commitTransaction")
                 .log("Committing Transaction")
                 .process("postTransactionProcess")
+                .choice()
+                .when(exchange -> exchange.getProperty("transactionResponseCode", String.class).equals("200"))
+                .log("Transaction was successful")
+                .otherwise()
+                .log("Transaction failed!")
         ;
 
     }
