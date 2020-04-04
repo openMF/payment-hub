@@ -96,7 +96,10 @@ mpesa-settings:
   bindings: #ott -> hub
   - name: binding-basic-settings
     host: http://0.0.0.0
-    #TODO: Complete it 
+    port: #TODO: Discuss for the port number
+  - name: balance
+    host: balance
+    #TODO: Complete the bindings
     
 
 
