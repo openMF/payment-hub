@@ -24,22 +24,22 @@ public class BaseTransaction extends RouteBuilder {
                 .choice()
                 .when(exchange -> exchange.getProperty("tokenResponseCode", String.class).equals("200"))
                 .log("Access Token fetch successful, moving to transaction.")
-                .to("direct:commitTransaction")
+                .to("direct:commitBalanceCheck")
                 .otherwise()
                 .log("Access token fetch unsuccessful.")
                 .to("direct:transactionFailure")
         ;
 
-        from("direct:commitTransaction")
-                .id("commitTransaction")
-                .log("Committing Transaction")
+        from("direct:commitBalanceCheck")
+                .id("commitBalanceCheck")
+                .log("Committing Balance Check")
                 .process("postTransactionProcess")
                 .choice()
                 .when(exchange -> exchange.getProperty("transactionResponseCode", String.class).equals("200"))
-                .log("Transaction was successful")
+                .log("Balance Check was successful")
                 .to("direct:endTransaction")
                 .otherwise()
-                .log("Transaction failed!")
+                .log("Balance Check failed!")
         ;
 
         from("direct:endTransaction")
