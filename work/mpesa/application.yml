@@ -1,0 +1,100 @@
+debug: true
+
+spring:
+  main:
+    web-application-type: none
+
+# the name of Camel
+camel:
+  springboot:
+    name: RestCamel
+
+iban-settings:
+  fsp-instance-id-first-index: 4
+  fsp-instance-id-length: 4
+  fsp-tenant-id-first-index: 8
+  fsp-tenant-id-length: 4
+
+hub-settings:
+  instance: in02
+  expiration: 30000
+  tenants: tn03, tn04
+
+channel-settings:
+  cors-enabled: true
+  headers:
+    - name: tenant
+      key: X-Tenant-Identifier
+  operations: #hub -> channel
+    - name: operation-basic-settings
+      host: https://fineract.mifos.io
+      tenants:
+        - name: tn03
+          port: 48888
+        - name: tn04
+          port: 48889
+    - name: transfers #post notification
+      base: interoperation/transfers
+    - name: response #put async response
+      base: interoperation/transactions
+  bindings: #channel -> hub
+    - name: binding-basic-settings
+      host: http://0.0.0.0
+      port: 80
+    - name: parties
+      base: channel/parties
+    - name: payment #post payment request
+      base: channel/transactions #/in01/channel/transactions
+    - name: status #get status by hub id
+      base: channel/transactions
+    - name: client-status #get status by client id
+      base: channel/transactions/client
+
+fsp-settings:
+  ilp-secret: h4on38bsDjKiat2783gnklgafikmeuu5123kpobb7jm99
+  auth:
+    profile: BASIC
+    encode: NONE
+    login-class: org.openmf.psp.dto.fsp.LoginFineractXResponseDTO
+  headers:
+    - name: user
+      key: User
+    - name: tenant
+      key: Fineract-Platform-TenantId
+  operations: #hub -> fsp
+    - name: operation-basic-settings
+      user: mifos
+      password: password
+      host: https://fineract.mifos.io
+      port: 8443
+    - name: auth #login
+      base: fineract-provider/api/v1/authentication
+    - name: requests
+      base: fineract-provider/api/v1/interoperation/requests
+    - name: transfers
+      base: fineract-provider/api/v1/interoperation/transfers
+
+mpesa-settings:
+  consumer-key: LOyKl0JIxeqwpv7qEUiU4QnKDuuiUPGO
+  consumer-secret: UirFo80R4UOACqvi
+  headers:
+  # TODO: Complete it
+  operations: #hub -> ott
+    - name: operation-basic-settings
+      host: https://sandbox.safaricom.co.ke
+    - name: oauth-token
+      base: oauth/v1/generate?grant_type=client_credentials
+    - name: account-balance
+      base: mpesa/accountbalance/v1/query
+  bindings: #ott -> hub
+    - name: binding-basic-settings
+      host: http://0.0.0.0
+      port: #TODO: Discuss for the port number
+    - name: balance
+      host: balance
+      #TODO: Complete the bindings
+
+mock-settings:
+  start-channel-consumers: false
+  start-switch-consumers: false
+  start-fsp-consumers: false
