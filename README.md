@@ -24,7 +24,7 @@ Put a settings.xml into your ~/.m2 directory with the following content:
         <repository>
           <id>central</id>
           <name>Central Repository</name>
-          <url>http://repo.maven.apache.org/maven2</url>
+          <url>https://repo.maven.apache.org/maven2</url>
           <layout>default</layout>
           <snapshots><enabled>false</enabled></snapshots>
         </repository>
@@ -39,7 +39,7 @@ Put a settings.xml into your ~/.m2 directory with the following content:
         <pluginRepository>
           <id>central</id>
           <name>Central Repository</name>
-          <url>http://repo.maven.apache.org/maven2</url>
+          <url>https://repo.maven.apache.org/maven2</url>
           <layout>default</layout>
           <snapshots><enabled>false</enabled></snapshots>
           <releases><updatePolicy>never</updatePolicy></releases>
@@ -63,7 +63,7 @@ Put a settings.xml into your ~/.m2 directory with the following content:
 Navigate to the sources folder in the payment-hub project and run the following:
 
     mvn clean package
-    
+
 ## Deploy
 
 Copy the paymenthub/sources/payment-hub/target/payment-hub-1.0.0-SNAPSHOT.jar file to your working directory.
