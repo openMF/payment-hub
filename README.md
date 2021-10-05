@@ -54,9 +54,6 @@ Put a settings.xml into your ~/.m2 directory with the following content:
       <id>artifactory</id>
     </profile>
   </profiles>
-  <activeProfiles>
-    <activeProfile>artifactory</activeProfile>
-  </activeProfiles>
 </settings>
 ```
 
